@@ -1,0 +1,70 @@
+service: citas-medicas-api  # Nombre del servicio
+
+plugins:
+  - serverless-openapi-documentation
+
+custom:
+  documentation:
+    api:
+      info:
+        title: Citas Médicas API
+        version: '1.0.0'
+        description: API para agendamiento de citas médicas por país.
+    models:
+      - name: CreateAppointmentRequest
+        contentType: application/json
+        schema:
+          type: object
+          properties:
+            insuredId:
+              type: string
+              description: "ID del asegurado para la cita"
+            scheduleId:
+              type: integer
+              description: "ID del horario para la cita"
+            countryISO:
+              type: string
+              description: "Código de país en ISO (PE para Perú, CL para Chile)"
+              enum: ['PE', 'CL']
+    # Respuestas de la API para las funciones
+    responses:
+      200:
+        description: "Cita creada exitosamente"
+        body:
+          application/json:
+            schema:
+              type: object
+              properties:
+                appointmentId:
+                  type: string
+                  description: "ID de la cita creada"
+                status:
+                  type: string
+                  description: "Estado de la cita"
+      400:
+        description: "Solicitud incorrecta"
+      500:
+        description: "Error interno del servidor"
+
+functions:
+  appointment:
+    handler: src/infrastructure/lambda/appointment.handler
+    events:
+      - http:
+          path: /appointment
+          method: post
+      - http:
+          path: /appointment/{insuredId}
+          method: get
+    documentation:
+      summary: "Cita Médica API"
+      description: "Endpoints para crear y obtener citas médicas."
+      requestModels:
+        "application/json": CreateAppointmentRequest
+      responses:
+        200:
+          description: "Cita creada exitosamente"
+        400:
+          description: "Solicitud incorrecta"
+        500:
+          description: "Error interno del servidor"

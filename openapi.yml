@@ -1,0 +1,24 @@
+openapi: 3.0.0
+components:
+  schemas:
+    CreateAppointmentRequest:
+      type: object
+      properties:
+        insuredId:
+          type: string
+          description: ID del asegurado para la cita
+        scheduleId:
+          type: integer
+          description: ID del horario para la cita
+        countryISO:
+          type: string
+          description: 'Código de país en ISO (PE para Perú, CL para Chile)'
+          enum:
+            - PE
+            - CL
+  securitySchemes: {}
+info:
+  title: ''
+  description: ''
+  version: e6536954-1519-4536-b753-470c7f1cbe22
+paths: {}
